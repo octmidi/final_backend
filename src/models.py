@@ -24,7 +24,7 @@ class Unidad(db.Model):
     gastos = relationship('Gasto', back_populates='unidad')
 
 class Direccion(db.Model):
-    __tablename__ = 'direcccion'
+    __tablename__ = 'direccion'
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_pais = Column(Integer,ForeignKey('pais.id'), nullable=False)
     id_region = Column(Integer, nullable=False)
@@ -63,7 +63,7 @@ class TareaPersona(db.Model):
     id_persona = Column(Integer, ForeignKey('persona.id'), nullable=False)
     persona = relationship('Persona', back_populates='tareas')
     id_unidad = Column(Integer, ForeignKey('unidad.id'), nullable=False)
-    unidad = relationship('Unidad', back_populates='tareas_personas')
+    unidad = relationship('Unidad', backref='tareas_personas')
     id_tarea = Column(Integer, ForeignKey('tarea.id'), nullable=False)
     tarea = relationship('Tarea', back_populates='personas')
     fecha_inicio = Column(Date, nullable=False)
@@ -77,15 +77,18 @@ class Gasto(db.Model):
     unidad = relationship('Unidad', back_populates='gastos')
     monto_original = Column(Integer, nullable=False)
     descripcion = Column(String(100), nullable=False)
-    gastos_personas = relationship('GastoPersona', back_populates='gasto')
+    gastos_relacionados = relationship('GastoPersona', back_populates='gasto')
+    
 
 class GastoPersona(db.Model):
     __tablename__ = 'gasto_persona'
     id_persona = Column(Integer, ForeignKey('persona.id'), nullable=False, primary_key=True)
-    persona = relationship('Persona', back_populates='gastos')
+    persona = relationship('Persona', backref='gasto_persona')
     id_gasto = Column(Integer, ForeignKey('gasto.id'), nullable=False, primary_key=True)
+    gasto = relationship('Gasto', back_populates='gastos_relacionados')
     monto_prorrateado = Column(Integer, nullable=False)
-   
+
+  
 
 class Perfil(db.Model):
     __tablename__ = 'perfil'

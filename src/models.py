@@ -22,6 +22,7 @@ class Unidad(db.Model):
     personas = relationship('Persona', back_populates='unidad')
     tareas = relationship('Tarea', back_populates='unidad')
     gastos = relationship('Gasto', back_populates='unidad')
+    tareas_personas= relationship('TareaPersona',back_populates='unidad')
 
 class Direccion(db.Model):
     __tablename__ = 'direccion'
@@ -63,7 +64,7 @@ class TareaPersona(db.Model):
     id_persona = Column(Integer, ForeignKey('persona.id'), nullable=False)
     persona = relationship('Persona', back_populates='tareas')
     id_unidad = Column(Integer, ForeignKey('unidad.id'), nullable=False)
-    unidad = relationship('Unidad', backref='tareas_personas')
+    unidad = relationship('Unidad', back_populates='tareas_personas')
     id_tarea = Column(Integer, ForeignKey('tarea.id'), nullable=False)
     tarea = relationship('Tarea', back_populates='personas')
     fecha_inicio = Column(Date, nullable=False)

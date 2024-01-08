@@ -27,13 +27,19 @@ class Unidad(db.Model):
 class Direccion(db.Model):
     __tablename__ = 'direccion'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    id_pais = Column(Integer,ForeignKey('pais.id'), nullable=False)
-    id_region = Column(Integer, nullable=False)
+    id_pais = Column(Integer, ForeignKey('pais.id'), nullable=False)
+    pais = relationship('Pais', back_populates='direcciones')  # Relación con la tabla Pais
+    id_region = Column(Integer, ForeignKey('region.id'), nullable=False)
+    region = relationship('Region', back_populates='direcciones')  # Relación con la tabla Region
+    id_comuna  = Column(Integer, ForeignKey('comuna.id'), nullable=False)
+    comuna = relationship('Comuna', back_populates='direcciones')  # Relación con la tabla Comuna
     calle = Column(String(100), nullable=False)
     numero = Column(String(10), nullable=False)
     depto_casa = Column(String(10), nullable=False)
     id_unidad = Column(Integer, ForeignKey('unidad.id'), nullable=False)
     unidad = relationship('Unidad', back_populates='direcciones')
+
+
 
 class Persona(db.Model):
     __tablename__ = 'persona'
@@ -103,6 +109,7 @@ class Pais(db.Model):
     codigo_iso = Column(String(3), nullable=False, unique=True)
     nombre = Column(String(250), nullable=False)
     regiones = relationship('Region', back_populates='pais')
+    direcciones = relationship('Direccion', back_populates='pais')
 
 class Region(db.Model):
     __tablename__ = 'region'
@@ -111,6 +118,7 @@ class Region(db.Model):
     nombre = Column(String(250), nullable=False)
     comunas = relationship('Comuna', back_populates='region')
     pais = relationship('Pais', back_populates='regiones')
+    direcciones = relationship("Direccion") 
 
 class Comuna(db.Model):
     __tablename__ = 'comuna'
@@ -118,3 +126,4 @@ class Comuna(db.Model):
     id_region = Column(Integer, ForeignKey('region.id'), nullable=False)
     nombre = Column(String(250), nullable=False)
     region = relationship('Region', back_populates='comunas')    
+    direcciones = relationship("Direccion") 

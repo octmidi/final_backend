@@ -76,7 +76,7 @@ class Gasto(db.Model):
     factura = Column(String(100), nullable=False, unique=True)
     id_unidad = Column(Integer, ForeignKey('unidad.id'), nullable=False)
     unidad = relationship('Unidad', back_populates='gastos')
-    monto_original = Column(Integer, nullable=False)
+    monto = Column(Integer, nullable=False)
     descripcion = Column(String(100), nullable=False)
     gastos_relacionados = relationship('GastoPersona', back_populates='gasto')
     

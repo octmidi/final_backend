@@ -19,6 +19,10 @@ def create_persona_admin():
    tareas = data.get('tareas')
    gastos = data.get('gastos')
    
+   # Validar que no exista más de un administrador por unidad
+   existing_admin = Persona.query.filter_by(id_unidad=id_unidad, id_perfil=1).first()
+   if existing_admin:
+       return jsonify({"error": "Ya existe un administrador para esta unidad"}), 400
       
 
    nuevo_admin = Persona(

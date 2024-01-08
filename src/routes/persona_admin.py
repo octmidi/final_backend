@@ -1,24 +1,27 @@
 from flask import jsonify, Blueprint, request
 from models import Persona, db
  
-create_persona_bp = Blueprint('create_persona', __name__)
+create_persona_admin_bp = Blueprint('create_persona_admin', __name__)
 
-@create_persona_bp.route('/create_persona', methods=['POST'])
-def create_persona(): 
+@create_persona_admin_bp.route('/create_persona_admin', methods=['POST'])
+def create_persona_admin(): 
    
    data = request.json  # Se espera que los datos lleguen en formato JSON desde el front-end
 
    rut = data.get('rut')  #
    id_unidad = data.get('id_unidad')
-   estado = data.get('estado')
+   estado = data.get('estado',True) # no requerido en el front
    email = data.get('email')
    nombre = data.get('nombre')
-   id_perfil = data.get('id_perfil')
+   id_perfil = data.get('id_perfil', 1) # no requerido en el front ,Establece el valor predeterminado de id_perfil, 
+                                        # 1 corresponde al id de perfil para "Admin"
    contrasena = data.get('contrasena')
    tareas = data.get('tareas')
    gastos = data.get('gastos')
+   
+      
 
-  nueva_persona = Persona(
+   nuevo_admin = Persona(
         rut = rut,
         id_unidad = id_unidad,
         estado = estado,
@@ -26,21 +29,21 @@ def create_persona():
         nombre = nombre,
         id_perfil = id_perfil,
         contrasena = contrasena
-    )
+        )
     
-    if tareas:
+   if tareas:
         # Asignar las tareas a la persona
-        nueva_persona.tareas = tareas
+        nuevo_admin.tareas = tareas
 
-    if gastos:
+   if gastos:
         # Asignar los gastos a la persona
-        nueva_persona.gastos = gastos
+        nuevo_admin.gastos = gastos
 
-    try:
-        db.session.add(nueva_persona)
+   try:
+        db.session.add(nuevo_admin)
         db.session.commit()
-        return jsonify({"message": "Persona creada exitosamente", "id": nueva_persona.id}), 201
-    except Exception as e:
+        return jsonify({"message": "Persona creada exitosamente", "id": nuevo_admin.id}), 201
+   except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Error al crear la persona", "details": str(e)}), 500
 

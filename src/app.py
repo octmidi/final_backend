@@ -7,7 +7,9 @@ from routes.persona_inquilino import create_persona_inquilino_bp
 from routes.unidad import create_unidad_bp
 from routes.tarea import create_tarea_bp
 from routes.gasto import create_gasto_bp
-from routes.direccion import create_direccion_bp  # Importa el blueprint de la creación de dirección
+from routes.gasto import get_gasto_por_unidad_bp
+from routes.direccion import create_direccion_bp  
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:10644@localhost:5434/cuentas_claras_db'
@@ -21,6 +23,7 @@ app.register_blueprint(create_persona_admin_bp)
 app.register_blueprint(create_persona_inquilino_bp)
 app.register_blueprint(create_tarea_bp)
 app.register_blueprint(create_gasto_bp)
+app.register_blueprint(get_gasto_por_unidad_bp)
 app.register_blueprint(create_direccion_bp)  # Utiliza el mismo nombre del blueprint que has definido en el archivo de rutas
 
 if __name__ == '__main__':

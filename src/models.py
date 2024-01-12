@@ -45,6 +45,7 @@ class Persona(db.Model):
     __tablename__ = 'persona'
     id = Column(Integer, primary_key=True, autoincrement=True)
     rut = Column(Integer, nullable=False, unique=True)
+    dv = Column(String(1), nullable= False, unique=False)
     id_unidad = Column(Integer, ForeignKey('unidad.id'), nullable=False)
     unidad = relationship('Unidad', back_populates='personas')
     estado = Column(Boolean, nullable=False)
@@ -52,7 +53,7 @@ class Persona(db.Model):
     nombre = Column(String(100), nullable=False)
     id_perfil = Column(Integer, ForeignKey('perfil.id'), nullable=False)
     perfil = relationship('Perfil', back_populates='personas')
-    contrasena = Column(String(100), nullable=False)
+    contrasena = Column(String(250), nullable=False)
     tareas = relationship('TareaPersona', back_populates='persona')
     gastos = relationship('GastoPersona', back_populates='persona')
 

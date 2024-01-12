@@ -1,5 +1,7 @@
 from flask import jsonify, Blueprint, request
 from models import Persona, db
+from rut_chile import rut_chile
+from werkzeug.security import generate_password_hash
  
 create_persona_inquilino_bp = Blueprint('create_persona_inquilino', __name__)
 
@@ -18,16 +20,19 @@ def create_persona_inquilino():
    tareas = data.get('tareas')
    gastos = data.get('gastos')
    
-      
+   #validar rut https://pypi.org/project/rut-chile/
+   if not(rut_chile.is_valid_rut(rut)):
+      return jsonify({"error": "rut no valido"}), 400   
 
    nuevo_inqulino = Persona(
-        rut = rut,
+        rut = rut[:-2],
+        dv = rut[-1],
         id_unidad = id_unidad,
         estado = estado,
         email = email,
         nombre = nombre,
         id_perfil = id_perfil,
-        contrasena = contrasena
+        contrasena = generate_password_hash(contrasena, method='pbkdf2:sha256')
         )
     
    if tareas:

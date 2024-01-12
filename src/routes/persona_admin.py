@@ -1,5 +1,7 @@
 from flask import jsonify, Blueprint, request
 from models import Persona, db
+from rut_chile import rut_chile
+from werkzeug.security import generate_password_hash
  
 create_persona_admin_bp = Blueprint('create_persona_admin', __name__)
 
@@ -23,17 +25,23 @@ def create_persona_admin():
    existing_admin = Persona.query.filter_by(id_unidad=id_unidad, id_perfil=1).first()
    if existing_admin:
        return jsonify({"error": "Ya existe un administrador para esta unidad"}), 400
-      
+   
+   #validar rut https://pypi.org/project/rut-chile/
+   if not(rut_chile.is_valid_rut(rut)):
+      return jsonify({"error": "rut no valido"}), 400
+               
+   
 
    nuevo_admin = Persona(
-        rut = rut,
+        rut = rut[:-2],
+        dv = rut[-1],
         id_unidad = id_unidad,
         estado = estado,
         email = email,
         nombre = nombre,
         id_perfil = id_perfil,
-        contrasena = contrasena
-        )
+         contrasena = hash_password(contrasena, method='pbkdf2:sha256')
+      )
     
    if tareas:
         # Asignar las tareas a la persona

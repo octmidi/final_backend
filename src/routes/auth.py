@@ -24,12 +24,13 @@ def login():
     if user and check_password_hash(user.contrasena, password):
         # El usuario existe y la contraseña coincide, crear un token JWT
         access_token = create_access_token(identity=user.id)
-        # Devolver los campos email, nombre y token en la respuesta
+        # Devolver los campos email, nombre y token en la respuesta 
         return jsonify({
             "id": user.id,
             "email": user.email,
             "nombre": user.nombre,
-            "token": access_token
+            "token": access_token 
+            
         }), 200
     else:
         return jsonify({"msg": "Credenciales inválidas"}), 401

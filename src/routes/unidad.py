@@ -8,12 +8,12 @@ create_unidad_bp = Blueprint('create_unidad', __name__)
 @create_unidad_bp.route('/create_unidad', methods=['POST'])
 def create_unidad():
     data = request.json  # Se espera que los datos lleguen en formato JSON desde el front-end
-    nombre = data.get('nombre')  # Se espera que el nombre llegue como parte de los datos
+    nombre_unidad = data.get('nombre_unidad')  # Se espera que el nombre llegue como parte de los datos
 
-    if not nombre:
+    if not nombre_unidad:
         return jsonify({"error": "El nombre de la unidad es requerido"}), 400
 
-    nueva_unidad = Unidad(nombre=nombre)
+    nueva_unidad = Unidad(nombre=nombre_unidad)
 
     try:
         db.session.add(nueva_unidad)

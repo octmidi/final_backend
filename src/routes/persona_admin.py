@@ -1,17 +1,28 @@
 from flask import jsonify, Blueprint, request
-from models import Persona, db
+from crea_unidad import create_unidad
+from models import Persona, Unidad, db
 from rut_chile import rut_chile
 from werkzeug.security import generate_password_hash
+
  
 create_persona_admin_bp = Blueprint('create_persona_admin', __name__)
 
 @create_persona_admin_bp.route('/create_persona_admin', methods=['POST'])
 def create_persona_admin(): 
-   
+     
    data = request.json  # Se espera que los datos lleguen en formato JSON desde el front-end
+  
+   # crea la unidad antes de crear la admin
+   unidad_creada = create_unidad(data['nombre_unidad'])
 
+   
+   if not unidad_creada:
+    return jsonify({"error": "Error al crear la unidad"}), 500
+  
+  
+   unidad_id = Unidad.query.filter_by(nombre=data['nombre_unidad']).first().id 
    rut = data.get('rut')  #
-   id_unidad = data.get('id_unidad')
+   id_unidad = unidad_id
    estado = data.get('estado',True) # no requerido en el front
    email = data.get('email')
    nombre = data.get('nombre')
@@ -40,7 +51,7 @@ def create_persona_admin():
         email = email,
         nombre = nombre,
         id_perfil = id_perfil,
-         contrasena = hash_password(contrasena, method='pbkdf2:sha256')
+        contrasena = generate_password_hash(contrasena, method='pbkdf2:sha256')
       )
     
    if tareas:
